@@ -1,20 +1,17 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(TicTacToe LANGUAGES CXX)
+project(lab2 LANGUAGES CXX)
 
-# стандарт C++
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# предупреждения
 if (MSVC)
     add_compile_options(/W4)
 else()
     add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-# исходники
 set(SOURCES
     main.cpp
     tictactoe/Minimax.cpp
@@ -22,7 +19,6 @@ set(SOURCES
     tictactoe/Board.cpp
 )
 
-# заголовки (для IDE)
 set(HEADERS
     tictactoe/Board.hpp
     tictactoe/Minimax.hpp
@@ -35,13 +31,12 @@ set(HEADERS
     sequence/DynamicArray.hpp
 )
 
-add_executable(TicTacToe
+add_executable(main
     ${SOURCES}
     ${HEADERS}
 )
 
-# пути для #include
-target_include_directories(TicTacToe PRIVATE
+target_include_directories(main PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/tictactoe
     ${CMAKE_CURRENT_SOURCE_DIR}/sequence

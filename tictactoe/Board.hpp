@@ -6,7 +6,7 @@
 
 class Board {
 private:
-    ArraySequence<Cell> cells; // 3x3 => 9 элементов
+    ArraySequence<Cell> cells;
 
 public:
     Board();

@@ -39,14 +39,12 @@ int heuristic(const Board& board) {
 int minimax(Board& board, int depth, int max_depth, bool is_maximizing) {
     int score = evaluate(board);
 
-    // терминальное состояние
     if (score != 0)
-        return score - depth; // быстрее выиграть — лучше
+        return score - depth;
 
     if (board.is_full())
         return 0;
 
-    // 🔹 ограничение глубины
     if (depth >= max_depth)
         return heuristic(board);
 
