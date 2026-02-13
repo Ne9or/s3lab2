@@ -126,3 +126,49 @@ int Board::evaluate() const {
 
     return score;
 }
+
+bool Board::isDeadPosition() const {
+
+    bool xPossible = false;
+    bool oPossible = false;
+
+    auto checkLine = [&](int dx, int dy, int startX, int startY) {
+
+        bool hasX = false;
+        bool hasO = false;
+        bool hasEmpty = false;
+
+        int x = startX;
+        int y = startY;
+
+        for (int i = 0; i < SIZE; i++) {
+
+            if (cells[x][y] == 'X') hasX = true;
+            if (cells[x][y] == 'O') hasO = true;
+            if (cells[x][y] == ' ') hasEmpty = true;
+
+            x += dx;
+            y += dy;
+        }
+
+        if (hasEmpty) {
+            if (!hasO) xPossible = true;
+            if (!hasX) oPossible = true;
+        }
+    };
+
+    // строки
+    for (int i = 0; i < SIZE; i++)
+        checkLine(0, 1, i, 0);
+
+    // столбцы
+    for (int j = 0; j < SIZE; j++)
+        checkLine(1, 0, 0, j);
+
+    // диагонали
+    checkLine(1, 1, 0, 0);
+    checkLine(1, -1, 0, SIZE - 1);
+
+    return (!xPossible && !oPossible);
+}
+

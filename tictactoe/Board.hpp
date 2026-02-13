@@ -11,6 +11,7 @@ public:
     bool makeMove(int row, int col, char player);
     bool isFree(int row, int col) const;
     bool isFull() const;
+    bool isDeadPosition() const;
 
     char checkWinner() const;
     int evaluate() const;

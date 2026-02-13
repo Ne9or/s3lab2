@@ -94,7 +94,7 @@ void UI::start() {
             break;
         }
 
-        if (board.isFull()) {
+        if (board.isFull() || board.isDeadPosition()) {
             printBoard();
             cout << "Ничья!\n";
             break;
@@ -108,7 +108,7 @@ void UI::start() {
             break;
         }
 
-        if (board.isFull()) {
+        if (board.isFull() || board.isDeadPosition()) {
             printBoard();
             cout << "Ничья!\n";
             break;
