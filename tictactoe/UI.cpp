@@ -72,8 +72,12 @@ void UI::computerMove() {
 
     tree.findBestMove(bestRow, bestCol);
 
+    cout << "Просмотрено узлов: "
+         << tree.getVisitedNodes()
+         << endl;
+
     if (bestRow != -1 && bestCol != -1)
-        board.makeMove(bestRow, bestCol, 'O');
+        board.makeMove(bestRow, bestCol, 'X');
 }
 
 void UI::start() {

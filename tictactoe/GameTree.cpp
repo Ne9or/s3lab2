@@ -9,6 +9,8 @@ GameTree::GameTree(const Board& initial, int depth) {
 
     maxDepth = depth;
 
+    nodesVisited = 0;
+
     buildTree(root);
 }
 
@@ -53,7 +55,9 @@ void GameTree::buildTree(Node* node) {
     }
 }
 
-int GameTree::minimax(Node* node) {
+int GameTree::alphaBeta(Node* node, int alpha, int beta) {
+
+    nodesVisited++;
 
     if (node->children.get_size() == 0) {
         node->value = node->state.evaluate();
@@ -62,46 +66,74 @@ int GameTree::minimax(Node* node) {
 
     if (node->maximizing) {
 
-        int best = -1000000;
+        int value = -1000000;
 
         for (int i = 0; i < node->children.get_size(); i++) {
-            int val = minimax(node->children.get(i));
-            if (val > best)
-                best = val;
+
+            int childValue = alphaBeta(node->children.get(i), alpha, beta);
+
+            if (childValue > value)
+                value = childValue;
+
+            if (value > alpha)
+                alpha = value;
+
+            if (beta <= alpha)
+                break;
         }
 
-        node->value = best;
-        return best;
+        node->value = value;
+        return value;
     }
     else {
 
-        int best = 1000000;
+        int value = 1000000;
 
         for (int i = 0; i < node->children.get_size(); i++) {
-            int val = minimax(node->children.get(i));
-            if (val < best)
-                best = val;
+
+            int childValue = alphaBeta(node->children.get(i), alpha, beta);
+
+            if (childValue < value)
+                value = childValue;
+
+            if (value < beta)
+                beta = value;
+
+            if (beta <= alpha)
+                break;
         }
 
-        node->value = best;
-        return best;
+        node->value = value;
+        return value;
     }
 }
+
 
 void GameTree::findBestMove(int& row, int& col) {
 
     int bestValue = -1000000;
 
+    int alpha = -1000000;
+    int beta = 1000000;
+
     for (int i = 0; i < root->children.get_size(); i++) {
 
         Node* child = root->children.get(i);
 
-        int val = minimax(child);
+        int val = alphaBeta(child, alpha, beta);
 
         if (val > bestValue) {
             bestValue = val;
             row = child->moveRow;
             col = child->moveCol;
         }
+
+        if (val > alpha)
+            alpha = val;
     }
 }
+
+int GameTree::getVisitedNodes() const {
+    return nodesVisited;
+}
+
