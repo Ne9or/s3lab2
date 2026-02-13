@@ -77,7 +77,7 @@ void UI::computerMove() {
          << endl;
 
     if (bestRow != -1 && bestCol != -1)
-        board.makeMove(bestRow, bestCol, 'X');
+        board.makeMove(bestRow, bestCol, 'O');
 }
 
 void UI::start() {
