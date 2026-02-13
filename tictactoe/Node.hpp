@@ -1,6 +1,6 @@
 #pragma once
 #include "Board.hpp"
-#include "ArraySequence.hpp"
+#include "../sequence/ArraySequence.hpp"
 
 struct Node {
 
