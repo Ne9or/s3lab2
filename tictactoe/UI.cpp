@@ -1,51 +1,113 @@
-#include "UI.hpp"
 #include <iostream>
 #include <limits>
+#include "UI.hpp"
+#include "GameTree.hpp"
 
-static char cell_to_char(Cell c) {
-    if (c == Cell::X) return 'X';
-    if (c == Cell::O) return 'O';
-    return '.';
+using namespace std;
+
+UI::UI(int depth) {
+    maxDepth = depth;
 }
 
-void print_board(const Board& board) {
-    std::cout << "\nCurrent board:\n";
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            std::cout << cell_to_char(board.get(i, j)) << " ";
+void UI::printBoard() const {
+
+    cout << "\n      0   1   2   3   4\n";
+    cout << "    +---+---+---+---+---+\n";
+
+    for (int i = 0; i < 5; i++) {
+
+        cout << "  " << i << " |";
+
+        for (int j = 0; j < 5; j++) {
+            cout << " " << board.getCell(i, j) << " |";
         }
-        std::cout << "\n";
+
+        cout << "\n";
+        cout << "    +---+---+---+---+---+\n";
     }
-    std::cout << std::endl;
+
+    cout << endl;
 }
 
-bool read_player_move(Board& board) {
+
+void UI::playerMove() {
+
     int row, col;
 
-    std::cout << "Enter your move (row col): ";
+    while (true) {
 
-    // 🔹 Проверка: ввели ли именно числа
-    if (!(std::cin >> row >> col)) {
-        std::cout << "Invalid input. Please enter two numbers.\n";
+        cout << "Ваш ход (строка столбец): ";
 
-        // очистка потока
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        return false;
+        cin >> row >> col;
+
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Некорректный ввод! Введите два числа.\n";
+            continue;
+        }
+
+        if (row < 0 || row >= 5 || col < 0 || col >= 5) {
+            cout << "Координаты вне диапазона 0–4.\n";
+            continue;
+        }
+
+        if (!board.isFree(row, col)) {
+            cout << "Клетка занята!\n";
+            continue;
+        }
+
+        board.makeMove(row, col, 'X');
+        break;
     }
+}
 
-    // 🔹 Проверка диапазона
-    if (row < 0 || row > 2 || col < 0 || col > 2) {
-        std::cout << "Coordinates must be between 0 and 2.\n";
-        return false;
+
+void UI::computerMove() {
+
+    GameTree tree(board, maxDepth);
+
+    int bestRow = -1;
+    int bestCol = -1;
+
+    tree.findBestMove(bestRow, bestCol);
+
+    if (bestRow != -1 && bestCol != -1)
+        board.makeMove(bestRow, bestCol, 'O');
+}
+
+void UI::start() {
+
+    while (true) {
+
+        printBoard();
+
+        playerMove();
+
+        if (board.checkWinner() == 'X') {
+            printBoard();
+            cout << "Вы выиграли!\n";
+            break;
+        }
+
+        if (board.isFull()) {
+            printBoard();
+            cout << "Ничья!\n";
+            break;
+        }
+
+        computerMove();
+
+        if (board.checkWinner() == 'O') {
+            printBoard();
+            cout << "Компьютер выиграл!\n";
+            break;
+        }
+
+        if (board.isFull()) {
+            printBoard();
+            cout << "Ничья!\n";
+            break;
+        }
     }
-
-    // 🔹 Проверка занятости клетки
-    if (board.get(row, col) != Cell::Empty) {
-        std::cout << "This cell is already occupied.\n";
-        return false;
-    }
-
-    board.set(row, col, Cell::X);
-    return true;
 }

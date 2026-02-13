@@ -1,54 +1,128 @@
-
 #include "Board.hpp"
 
-Board::Board() : cells(9) {
-    for (int i = 0; i < 9; i++) {
-        cells.set(i, Cell::Empty);
-    }
+Board::Board() {
+    for (int i = 0; i < SIZE; i++)
+        for (int j = 0; j < SIZE; j++)
+            cells[i][j] = ' ';
 }
 
-Cell Board::get(int row, int col) const {
-    return cells.get(row * 3 + col);
-}
+bool Board::makeMove(int row, int col, char player) {
+    if (cells[row][col] != ' ')
+        return false;
 
-void Board::set(int row, int col, Cell value) {
-    cells.set(row * 3 + col, value);
-}
-
-bool Board::is_full() const {
-    for (int i = 0; i < 9; i++) {
-        if (cells.get(i) == Cell::Empty)
-            return false;
-    }
+    cells[row][col] = player;
     return true;
 }
 
-Cell Board::winner() const {
-    static int lines[8][3] = {
-        {0,1,2},{3,4,5},{6,7,8},
-        {0,3,6},{1,4,7},{2,5,8},
-        {0,4,8},{2,4,6}
-    };
-
-    for (auto& line : lines) {
-        Cell a = cells.get(line[0]);
-        if (a != Cell::Empty &&
-            a == cells.get(line[1]) &&
-            a == cells.get(line[2])) {
-            return a;
-        }
-    }
-    return Cell::Empty;
+bool Board::isFree(int row, int col) const {
+    return cells[row][col] == ' ';
 }
 
-ArraySequence<Move>* Board::available_moves() const {
-    auto* moves = new ArraySequence<Move>();
+bool Board::isFull() const {
+    for (int i = 0; i < SIZE; i++)
+        for (int j = 0; j < SIZE; j++)
+            if (cells[i][j] == ' ')
+                return false;
+    return true;
+}
 
-    for (int i = 0; i < 9; i++) {
-        if (cells.get(i) == Cell::Empty) {
-            moves->append({ i / 3, i % 3 });
-        }
+char Board::getCell(int row, int col) const {
+    return cells[row][col];
+}
+
+char Board::checkWinner() const {
+
+    // строки
+    for (int i = 0; i < SIZE; i++) {
+        char first = cells[i][0];
+        if (first == ' ') continue;
+
+        bool win = true;
+        for (int j = 1; j < SIZE; j++)
+            if (cells[i][j] != first)
+                win = false;
+
+        if (win) return first;
     }
 
-    return moves;
+    // столбцы
+    for (int j = 0; j < SIZE; j++) {
+        char first = cells[0][j];
+        if (first == ' ') continue;
+
+        bool win = true;
+        for (int i = 1; i < SIZE; i++)
+            if (cells[i][j] != first)
+                win = false;
+
+        if (win) return first;
+    }
+
+    // главная диагональ
+    char first = cells[0][0];
+    if (first != ' ') {
+        bool win = true;
+        for (int i = 1; i < SIZE; i++)
+            if (cells[i][i] != first)
+                win = false;
+        if (win) return first;
+    }
+
+    // побочная диагональ
+    first = cells[0][SIZE - 1];
+    if (first != ' ') {
+        bool win = true;
+        for (int i = 1; i < SIZE; i++)
+            if (cells[i][SIZE - 1 - i] != first)
+                win = false;
+        if (win) return first;
+    }
+
+    return ' ';
+}
+
+int Board::evaluate() const {
+
+    char winner = checkWinner();
+
+    if (winner == 'X') return 10000;
+    if (winner == 'O') return -10000;
+
+    int score = 0;
+
+    // строки
+    for (int i = 0; i < SIZE; i++) {
+        int xCount = 0;
+        int oCount = 0;
+
+        for (int j = 0; j < SIZE; j++) {
+            if (cells[i][j] == 'X') xCount++;
+            if (cells[i][j] == 'O') oCount++;
+        }
+
+        if (xCount > 0 && oCount == 0)
+            score += xCount * xCount;
+
+        if (oCount > 0 && xCount == 0)
+            score -= oCount * oCount;
+    }
+
+    // столбцы
+    for (int j = 0; j < SIZE; j++) {
+        int xCount = 0;
+        int oCount = 0;
+
+        for (int i = 0; i < SIZE; i++) {
+            if (cells[i][j] == 'X') xCount++;
+            if (cells[i][j] == 'O') oCount++;
+        }
+
+        if (xCount > 0 && oCount == 0)
+            score += xCount * xCount;
+
+        if (oCount > 0 && xCount == 0)
+            score -= oCount * oCount;
+    }
+
+    return score;
 }

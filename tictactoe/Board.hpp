@@ -1,21 +1,19 @@
 #pragma once
 
-#include "../sequence/ArraySequence.hpp"
-#include "Cell.hpp"
-#include "Move.hpp"
-
 class Board {
 private:
-    ArraySequence<Cell> cells;
+    static const int SIZE = 5;
+    char cells[SIZE][SIZE];
 
 public:
     Board();
 
-    Cell get(int row, int col) const;
-    void set(int row, int col, Cell value);
+    bool makeMove(int row, int col, char player);
+    bool isFree(int row, int col) const;
+    bool isFull() const;
 
-    bool is_full() const;
-    Cell winner() const;
+    char checkWinner() const;
+    int evaluate() const;
 
-    ArraySequence<Move>* available_moves() const;
+    char getCell(int row, int col) const;
 };

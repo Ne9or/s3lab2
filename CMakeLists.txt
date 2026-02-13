@@ -14,17 +14,17 @@ endif()
 
 set(SOURCES
     main.cpp
-    tictactoe/Minimax.cpp
     tictactoe/UI.cpp
     tictactoe/Board.cpp
+    tictactoe/GameTree.cpp
 )
 
 set(HEADERS
     tictactoe/Board.hpp
-    tictactoe/Minimax.hpp
     tictactoe/UI.hpp
-    tictactoe/Cell.hpp
+    tictactoe/Node.hpp
     tictactoe/Move.hpp
+    tictactoe/GameTree.hpp
 
     sequence/Sequence.hpp
     sequence/ArraySequence.hpp
