@@ -29,7 +29,7 @@ void GameTree::buildTree(Node* node) {
     if (node->state.isFull())
         return;
 
-    char player = node->maximizing ? 'X' : 'O';
+    char player = node->maximizing ? 'O' : 'X';
 
     for (int i = 0; i < 5; i++) {
         for (int j = 0; j < 5; j++) {

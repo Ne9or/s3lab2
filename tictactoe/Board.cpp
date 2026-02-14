@@ -85,8 +85,8 @@ int Board::evaluate() const {
 
     char winner = checkWinner();
 
-    if (winner == 'X') return 10000;
-    if (winner == 'O') return -10000;
+    if (winner == 'O') return 10000;
+    if (winner == 'X') return -10000;
 
     int score = 0;
 
