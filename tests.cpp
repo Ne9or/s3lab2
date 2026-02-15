@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "tictactoe/Board.hpp"
-#include "tictactoe/GameTree.hpp"
+#include "tictactoe/AlphaBeta.hpp"
 
 
 TEST(BoardTest, DetectWinRow) {
@@ -11,7 +11,7 @@ TEST(BoardTest, DetectWinRow) {
     for (int i = 0; i < 5; i++)
         board.makeMove(0, i, 'X');
 
-    EXPECT_TRUE(board.checkWinner());
+    EXPECT_NE(board.checkWinner(), ' ');
 }
 
 
@@ -35,54 +35,40 @@ TEST(BoardTest, DeadPositionDetection) {
     EXPECT_TRUE(board.isDeadPosition());
 }
 
-TEST(GameTreeTest, FindImmediateWin) {
-
-    Board board;
-
-    for (int i = 0; i < 4; i++)
-        board.makeMove(0, i, 'X');
-
-    GameTree tree(board, 2);
-
-    int row = -1;
-    int col = -1;
-
-    tree.findBestMove(row, col);
-
-    EXPECT_EQ(row, 0);
-    EXPECT_EQ(col, 4);
-}
-
-TEST(GameTreeTest, BlockOpponentWin) {
+TEST(AlphaBetaTest, FindImmediateWin) {
 
     Board board;
 
     for (int i = 0; i < 4; i++)
         board.makeMove(0, i, 'O');
 
-    GameTree tree(board, 3);
+    auto bestMove = findBestMove(board, 2);
 
-    int row = -1;
-    int col = -1;
-
-    tree.findBestMove(row, col);
-
-    EXPECT_EQ(row, 0);
-    EXPECT_EQ(col, 4);
+    EXPECT_EQ(bestMove.first, 0);
+    EXPECT_EQ(bestMove.second, 4);
 }
 
 
-TEST(GameTreeTest, NodesVisitedPositive) {
+TEST(AlphaBetaTest, BlockOpponentWin) {
 
     Board board;
 
-    GameTree tree(board, 2);
+    for (int i = 0; i < 4; i++)
+        board.makeMove(0, i, 'X');
 
-    int row, col;
-    tree.findBestMove(row, col);
+    auto bestMove = findBestMove(board, 3);
 
-    EXPECT_GT(tree.getVisitedNodes(), 0);
+    EXPECT_EQ(bestMove.first, 0);
+    EXPECT_EQ(bestMove.second, 4);
 }
 
 
+TEST(AlphaBetaTest, ReturnsValidMove) {
 
+    Board board;
+
+    auto bestMove = findBestMove(board, 2);
+
+    EXPECT_TRUE(bestMove.first >= 0);
+    EXPECT_TRUE(bestMove.second >= 0);
+}

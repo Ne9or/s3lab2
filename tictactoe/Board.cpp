@@ -14,6 +14,11 @@ bool Board::makeMove(int row, int col, char player) {
     return true;
 }
 
+void Board::undoMove(int row, int col)
+{
+    cells[row][col] = ' ';
+}
+
 bool Board::isFree(int row, int col) const {
     return cells[row][col] == ' ';
 }
@@ -28,6 +33,22 @@ bool Board::isFull() const {
 
 char Board::getCell(int row, int col) const {
     return cells[row][col];
+}
+
+ArraySequence<std::pair<int,int>> Board::getAvailableMoves() const
+{
+    ArraySequence<std::pair<int,int>> moves;
+
+    for (int i = 0; i < SIZE; i++)
+    {
+        for (int j = 0; j < SIZE; j++)
+        {
+            if (isFree(i, j))
+                moves.append({i, j});
+        }
+    }
+
+    return moves;
 }
 
 char Board::checkWinner() const {

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <limits>
 #include "UI.hpp"
-#include "GameTree.hpp"
+#include "AlphaBeta.hpp"
 
 using namespace std;
 
@@ -65,16 +65,10 @@ void UI::playerMove() {
 
 void UI::computerMove() {
 
-    GameTree tree(board, maxDepth);
+    auto bestMove = findBestMove(board, maxDepth);
 
-    int bestRow = -1;
-    int bestCol = -1;
-
-    tree.findBestMove(bestRow, bestCol);
-
-    cout << "Просмотрено узлов: "
-         << tree.getVisitedNodes()
-         << endl;
+    int bestRow = bestMove.first;
+    int bestCol = bestMove.second;
 
     if (bestRow != -1 && bestCol != -1)
         board.makeMove(bestRow, bestCol, 'O');

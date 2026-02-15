@@ -1,8 +1,13 @@
 #include "tictactoe/UI.hpp"
+#include <iostream>
 
 int main() {
 
-    int depth = 3;   // глубина поиска
+    std::cout<<"Input depth of search";
+
+    int depth;
+    
+    std::cin >> depth;
 
     UI ui(depth);
     ui.start();

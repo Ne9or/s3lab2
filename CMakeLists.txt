@@ -16,14 +16,13 @@ set(SOURCES
     main.cpp
     tictactoe/UI.cpp
     tictactoe/Board.cpp
-    tictactoe/GameTree.cpp
+    tictactoe/AlphaBeta.cpp
 )
 
 set(HEADERS
     tictactoe/Board.hpp
     tictactoe/UI.hpp
-    tictactoe/Node.hpp
-    tictactoe/GameTree.hpp
+    tictactoe/AlphaBeta.hpp
 
     sequence/Sequence.hpp
     sequence/ArraySequence.hpp
@@ -57,7 +56,7 @@ enable_testing()
 add_executable(tests
     tests.cpp
     tictactoe/Board.cpp 
-    tictactoe/GameTree.cpp
+    tictactoe/AlphaBeta.cpp
 )
 
 target_include_directories(tests
